@@ -29,8 +29,10 @@ class BottomActions extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0, top: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 14,
+        runSpacing: 8,
         children: [
           // 1. Color Palette / Style button
           Container(
@@ -58,8 +60,6 @@ class BottomActions extends StatelessWidget {
               tooltip: 'Arrow Color Style (${currentStyle.label})',
             ),
           ),
-
-          const SizedBox(width: 14),
 
           // 2. Hint Button (Main action button)
           Stack(
@@ -117,8 +117,6 @@ class BottomActions extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(width: 14),
-
           // 3. Grid Assist Toggle
           Container(
             width: 54,
@@ -154,8 +152,6 @@ class BottomActions extends StatelessWidget {
               tooltip: 'Grid Assist',
             ),
           ),
-
-          const SizedBox(width: 14),
 
           // 4. Reset Zoom / Center button
           Container(

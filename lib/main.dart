@@ -14,10 +14,12 @@ import 'data/settings_repository.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Lock orientation to portrait on phones
+  // Support portrait and landscape on phones and tablets.
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
   ]);
 
   // Request App Tracking Transparency permission on iOS at startup

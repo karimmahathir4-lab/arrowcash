@@ -225,6 +225,210 @@ class _HomeScreenState extends State<HomeScreen>
     final bg = _isDark ? T.darkBg : T.bg;
     final titleColor = _isDark ? Colors.white : T.title;
 
+    if (MediaQuery.orientationOf(context) == Orientation.landscape) {
+      return Scaffold(
+        backgroundColor: bg,
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final compact = constraints.maxWidth < 700;
+              final logoSize = compact ? 88.0 : 112.0;
+              return Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: compact ? 14 : 24,
+                  vertical: 8,
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: _showGetHintsDialog,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 7,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _isDark ? T.darkChipBg : T.chipBg,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.lightbulb_outline,
+                                  size: 18,
+                                  color: T.accent,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  '$_hints hints',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: _isDark
+                                        ? T.darkChipText
+                                        : T.chipText,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.settings_outlined,
+                            color: T.accent,
+                            size: 26,
+                          ),
+                          onPressed: _openSettings,
+                          tooltip: 'Settings',
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 5,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Flexible(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      GestureDetector(
+                                        onLongPress: _showDebugMenu,
+                                        child: Text(
+                                          'Arrow Cash\nClear Rush',
+                                          style: TextStyle(
+                                            fontSize: compact ? 27 : 34,
+                                            fontWeight: FontWeight.w900,
+                                            color: titleColor,
+                                            letterSpacing: -0.5,
+                                            height: 1.05,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Escape the maze, arrow by arrow',
+                                        style: TextStyle(
+                                          fontSize: compact ? 13 : 16,
+                                          color: _isDark
+                                              ? T.darkChipText
+                                              : T.chipText,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: compact ? 8 : 20),
+                                SizedBox(
+                                  width: logoSize,
+                                  height: logoSize,
+                                  child: AnimatedBuilder(
+                                    animation: _miniAnimController,
+                                    builder: (context, _) => CustomPaint(
+                                      painter: _AnimatedLogoPainter(
+                                        t: _miniAnimController.value,
+                                        isDark: _isDark,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: compact ? 12 : 28),
+                          Expanded(
+                            flex: 4,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 58,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: T.accent,
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      AudioService.instance.play(Sfx.click);
+                                      Haptics.light();
+                                      await context.push(
+                                        '/game/$_currentLevel',
+                                      );
+                                      _refresh();
+                                    },
+                                    child: Text(
+                                      'PLAY  ·  LEVEL $_currentLevel',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: OutlinedButton.icon(
+                                        icon: const Icon(
+                                          Icons.calendar_month_rounded,
+                                          color: T.accent,
+                                        ),
+                                        label: const Text('Daily'),
+                                        onPressed: () async {
+                                          AudioService.instance.play(Sfx.click);
+                                          Haptics.light();
+                                          await context.push('/daily');
+                                          _refresh();
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: OutlinedButton.icon(
+                                        icon: const Icon(
+                                          Icons.emoji_events_rounded,
+                                          color: T.accent,
+                                        ),
+                                        label: const Text('Trophies'),
+                                        onPressed: () async {
+                                          AudioService.instance.play(Sfx.click);
+                                          Haptics.light();
+                                          await context.push('/trophies');
+                                          _refresh();
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: bg,
       body: SafeArea(

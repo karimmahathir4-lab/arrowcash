@@ -537,6 +537,95 @@ class _GameScreenState extends State<GameScreen> {
 
     final bg = _isDark ? T.darkBg : T.bg;
 
+    if (MediaQuery.orientationOf(context) == Orientation.landscape) {
+      return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) _onBack();
+        },
+        child: Scaffold(
+          backgroundColor: bg,
+          body: SafeArea(
+            child: Column(
+              children: [
+                TopBar(
+                  title: _barTitle,
+                  onBack: _onBack,
+                  onReplay: _onReplay,
+                  onSettings: _openSettings,
+                  coins: _coins,
+                  isDark: _isDark,
+                ),
+                StatusRow(
+                  remaining: _state!.remainingCount,
+                  lives: _state!.lives,
+                  difficulty: _level!.difficulty,
+                  isDark: _isDark,
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            BoardView(
+                              state: _state!,
+                              controller: _controller!,
+                              isDark: _isDark,
+                              transformController: _transformController,
+                            ),
+                            if (_showTutorial && _tutorialArrow != null)
+                              TutorialOverlay(
+                                level: _level!,
+                                targetArrow: _tutorialArrow!,
+                                onDismiss: () {
+                                  setState(() => _showTutorial = false);
+                                },
+                              ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.sizeOf(context).width < 700
+                            ? 148
+                            : 176,
+                        child: Center(
+                          child: BottomActions(
+                            hintCount: _hints,
+                            gridActive: _state!.gridAssist,
+                            currentStyle: _currentStyle,
+                            onHintTap: () {
+                              AdService.instance.recordActionClick();
+                              _onHintTap();
+                            },
+                            onGridToggle: () {
+                              AdService.instance.recordActionClick();
+                              _controller!.toggleGridAssist();
+                            },
+                            onStyleTap: () {
+                              AdService.instance.recordActionClick();
+                              _openStylePicker();
+                            },
+                            onResetZoomTap: () {
+                              AdService.instance.recordActionClick();
+                              Haptics.selection();
+                              AudioService.instance.play(Sfx.click);
+                              _transformController.value = Matrix4.identity();
+                            },
+                            isDark: _isDark,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
